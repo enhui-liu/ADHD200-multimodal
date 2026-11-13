@@ -1,0 +1,33 @@
+seed: 42
+
+# 纳入标准与特征和 phenotype_xgboost.yaml 保持一致。
+data:
+  path: data/raw/adhd200_preprocessed_phenotypics.tsv
+  adhd_measure: 2
+  require_positive_adhd_index: true
+  features:
+    [
+      "Age",
+      "Gender",
+      "Handedness",
+      "Verbal IQ",
+      "Performance IQ",
+      "Full2 IQ",
+      "Full4 IQ",
+    ]
+
+cv:
+  n_splits: 5
+
+model:
+  C: 1.0
+  max_iter: 1000
+
+# 可取 "f1"、"youden" 或 0-1 之间的固定数值；在交叉验证的折外预测上确定。
+threshold: f1
+calibration_bins: 5
+
+bootstrap:
+  n_resamples: 1000
+
+output_dir: reports/phenotype_lr

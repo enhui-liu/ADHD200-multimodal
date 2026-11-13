@@ -1,0 +1,42 @@
+seed: 42
+
+data:
+  path: data/raw/adhd200_preprocessed_phenotypics.tsv
+  # 纳入标准：ADHD Measure 为 2，且 ADHD Index 为有效的正数。
+  adhd_measure: 2
+  require_positive_adhd_index: true
+  # 症状量表(ADHD Index 等)、Med Status、Secondary Dx 与诊断同源或随诊断产生，不作为特征，以免标签泄漏。
+  features:
+    [
+      "Age",
+      "Gender",
+      "Handedness",
+      "Verbal IQ",
+      "Performance IQ",
+      "Full2 IQ",
+      "Full4 IQ",
+    ]
+
+split:
+  test_fraction: 0.2
+
+cv:
+  n_splits: 5
+
+model:
+  n_estimators: 300
+  learning_rate: 0.03
+  max_depth: 3
+  min_child_weight: 3
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_lambda: 5.0
+
+# 可取 "f1"、"youden" 或 0-1 之间的固定数值；在交叉验证的开发集预测上确定。
+threshold: f1
+calibration_bins: 5
+
+bootstrap:
+  n_resamples: 1000
+
+output_dir: reports/phenotype_xgboost
