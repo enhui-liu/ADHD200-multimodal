@@ -1,0 +1,53 @@
+seed: 42
+
+data:
+  phenotype_path: data/raw/adhd200_preprocessed_phenotypics.tsv
+  additional_tcs_dir: "data/raw/additional ADHD200 "
+  file_pattern: "sfnwmrda*"
+  run_selection: first
+  standardize_per_subject: true
+
+model:
+  input_dim: 190
+  d_model: 64
+  nhead: 4
+  num_layers: 2
+  dim_feedforward: 128
+  dropout: 0.3
+  activation: gelu
+  norm_first: true
+  batch_first: true
+  pooling: mean
+
+# 在训练集内部切分验证集并按验证 Loss 选出最优架构与最优权重。
+architecture_candidates:
+  - name: base
+    d_model: 64
+    nhead: 4
+    num_layers: 2
+    dim_feedforward: 128
+  - name: lightweight
+    d_model: 32
+    nhead: 2
+    num_layers: 1
+    dim_feedforward: 64
+
+training:
+  batch_size: 16
+  epochs: 30
+  learning_rate: 0.001
+  weight_decay: 0.01
+  val_fraction: 0.2
+  early_stopping_patience: 5
+  early_stopping_min_delta: 0.0
+  device: auto
+
+threshold: f1
+calibration_bins: 5
+
+bootstrap:
+  n_resamples: 1000
+
+output:
+  checkpoint_path: models/transformer_additional_best.pt
+  report_dir: reports/transformer_pretrain

@@ -1,0 +1,11 @@
+data:
+  phenotype_path: data/raw/adhd200_preprocessed_phenotypics.tsv
+  raw_tcs_dir: data/raw/ADHD200_CC200_TCs_filtfix
+  processed_dir: data/processed
+  adhd_measure: 2
+  require_positive_adhd_index: true
+  site_map:
+    3: KKI
+    5: NYU
+  file_pattern: "sfnwmrda*"
+  manifest_filename: transformer_pre_manifest.csv

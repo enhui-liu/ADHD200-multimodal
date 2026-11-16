@@ -1,0 +1,127 @@
+{
+  "n_valid_subjects": 469,
+  "n_adhd": 140,
+  "n_control": 329,
+  "n_skipped_missing_dx": 0,
+  "n_skipped_missing_files": 2,
+  "site_counts": {
+    "Pittsburgh": 89,
+    "Peking_1": 85,
+    "OHSU": 79,
+    "Peking_2": 67,
+    "WashU": 59,
+    "NeuroIMAGE": 48,
+    "Peking_3": 42
+  },
+  "n_train": 375,
+  "n_val": 94,
+  "selected_architecture": "base",
+  "selected_n_params": 79489,
+  "selected_model_config": {
+    "input_dim": 190,
+    "d_model": 64,
+    "nhead": 4,
+    "num_layers": 2,
+    "dim_feedforward": 128,
+    "dropout": 0.3,
+    "activation": "gelu",
+    "norm_first": true,
+    "batch_first": true,
+    "pooling": "mean"
+  },
+  "best_epoch": 3,
+  "stopped_epoch": 8,
+  "best_val_loss": 0.5614963896731113,
+  "threshold": 0.35000000000000003,
+  "val_metrics": {
+    "auc": 0.7435064935064936,
+    "sensitivity": 0.75,
+    "specificity": 0.6818181818181818,
+    "f1": 0.6,
+    "brier": 0.1892358362674713,
+    "calibration_slope": 2.798192018231415,
+    "calibration_intercept": -0.17196109208378194,
+    "ece": 0.11426378548779387
+  },
+  "val_ci95": {
+    "auc": [
+      0.632736416484402,
+      0.8424958540630182
+    ],
+    "sensitivity": [
+      0.5909090909090909,
+      0.9117966751918158
+    ],
+    "specificity": [
+      0.560590909090909,
+      0.7910447761194029
+    ],
+    "f1": [
+      0.4589695550351288,
+      0.7247035573122529
+    ],
+    "brier": [
+      0.16223253570497037,
+      0.21941476315259933
+    ],
+    "calibration_slope": [
+      1.5274409418966535,
+      4.819639602465481
+    ],
+    "calibration_intercept": [
+      -0.6276940736049305,
+      0.25359148119358876
+    ],
+    "ece": [
+      0.07284277288362066,
+      0.20476225313354043
+    ]
+  },
+  "candidate_results": [
+    {
+      "name": "base",
+      "n_params": 79489,
+      "d_model": 64,
+      "nhead": 4,
+      "num_layers": 2,
+      "dim_feedforward": 128,
+      "best_epoch": 3,
+      "stopped_epoch": 8,
+      "best_val_loss": 0.5614963896731113,
+      "best_val_auroc": 0.7435064935064936
+    },
+    {
+      "name": "lightweight",
+      "n_params": 14817,
+      "d_model": 32,
+      "nhead": 2,
+      "num_layers": 1,
+      "dim_feedforward": 64,
+      "best_epoch": 6,
+      "stopped_epoch": 11,
+      "best_val_loss": 0.5673788246956277,
+      "best_val_auroc": 0.7310606060606061
+    }
+  ],
+  "checkpoint_path": "models/transformer_additional_best.pt",
+  "train_losses": [
+    0.6290083260536193,
+    0.6030642450650533,
+    0.591590518951416,
+    0.5151058672269185,
+    0.4530203377803167,
+    0.31404452180862424,
+    0.20434692736466725,
+    0.1256403481165568
+  ],
+  "val_losses": [
+    0.6194318919739825,
+    0.608748807552013,
+    0.5614963896731113,
+    0.8793965590761063,
+    0.6156693456020761,
+    0.8705288178109108,
+    0.9809862204054569,
+    0.9827879876532453
+  ]
+}

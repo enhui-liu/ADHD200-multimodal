@@ -1,0 +1,53 @@
+seed: 42
+
+data:
+  manifest_path: data/processed/transformer_pre_manifest.csv
+  processed_dir: data/processed
+  run_selection: first
+  standardize_per_subject: true
+
+model:
+  input_dim: 190
+  d_model: 64
+  nhead: 4
+  num_layers: 2
+  dim_feedforward: 128
+  dropout: 0.3
+  activation: gelu
+  norm_first: true
+  batch_first: true
+  pooling: mean
+
+# 在每折训练集内部通过内部验证 Loss 选择最优架构，外层验证折不参与架构选择。
+architecture_candidates:
+  - name: base
+    d_model: 64
+    nhead: 4
+    num_layers: 2
+    dim_feedforward: 128
+  - name: lightweight
+    d_model: 32
+    nhead: 2
+    num_layers: 1
+    dim_feedforward: 64
+
+cv:
+  n_splits: 5
+
+training:
+  batch_size: 16
+  epochs: 30
+  learning_rate: 0.001
+  weight_decay: 0.01
+  inner_val_fraction: 0.2
+  early_stopping_patience: 5
+  early_stopping_min_delta: 0.0
+  device: auto
+
+threshold: f1
+calibration_bins: 5
+
+bootstrap:
+  n_resamples: 1000
+
+output_dir: reports/transformer

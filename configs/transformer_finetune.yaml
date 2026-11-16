@@ -1,0 +1,43 @@
+seed: 42
+
+data:
+  manifest_path: data/processed/transformer_pre_manifest.csv
+  processed_dir: data/processed
+  run_selection: first
+  standardize_per_subject: true
+
+# 架构由预训练权重决定，每折以该权重初始化后在训练折内部微调。
+pretrained_checkpoint: models/transformer_additional_best.pt
+
+model:
+  input_dim: 190
+  d_model: 64
+  nhead: 4
+  num_layers: 2
+  dim_feedforward: 128
+  dropout: 0.3
+  activation: gelu
+  norm_first: true
+  batch_first: true
+  pooling: mean
+
+cv:
+  n_splits: 5
+
+training:
+  batch_size: 16
+  epochs: 30
+  learning_rate: 0.0003
+  weight_decay: 0.01
+  inner_val_fraction: 0.2
+  early_stopping_patience: 5
+  early_stopping_min_delta: 0.0
+  device: auto
+
+threshold: f1
+calibration_bins: 5
+
+bootstrap:
+  n_resamples: 1000
+
+output_dir: reports/transformer_finetune

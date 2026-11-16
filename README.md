@@ -1,43 +1,119 @@
-# ADHD-200 多模态中期融合
+# ADHD-200 Multimodal Classification
 
-本项目用于研究 ADHD-200 表型数据与脑影像数据的二分类。模型采用中期融合：表型分支和影像分支各自编码为潜在向量，再拼接并由分类头输出 ADHD 预测。
+## 01 · Project Overview
 
-## 目录约定
+This project investigates binary ADHD classification using phenotypic and resting-state fMRI data from the [ADHD-200 dataset](https://fcon_1000.projects.nitrc.org/indi/adhd200/), accessed through NITRC.
 
-- `data/raw/`：原始、受访问控制的数据；禁止提交。
-- `data/external/`：外部参考数据或模板；禁止提交。
-- `data/interim/`：中间预处理产物；禁止提交。
-- `data/processed/`：可供训练的分割清单和特征；禁止提交。
-- `configs/`：可复现实验配置。
-- `src/adhd200_multimodal/`：数据、模型、训练与评估代码。
-- `models/`：检查点和已训练模型；禁止提交。
-- `notebooks/`：探索性分析；不承载生产训练逻辑。
-- `reports/figures/`：导出图表；禁止提交。
-- `tests/`：单元测试。
+The primary research question is whether combining fMRI representations with phenotypic features through intermediate fusion can improve classification performance over unimodal baselines.
 
-## 中期融合流程
+The project includes phenotype-based machine learning models, a Transformer-based fMRI classifier, and a multimodal feature-level fusion framework.
 
-1. 对每位受试者按 `subject_id` 连接表型和影像记录。
-2. 仅用训练集拟合表型缺失值处理、编码和标准化器。
-3. 表型 MLP 生成表型表示 $z_p$，影像编码器生成影像表示 $z_i$。
-4. 融合表示为 $z_f = [z_p; z_i]$，分类头输出 ADHD logits。
-5. 在受试者层级划分训练、验证、测试集，避免同一受试者泄漏到多个分割。
+## 02 · Model Architecture
 
-## 环境与检查
+The intermediate fusion architecture consists of two modality-specific encoders. A Transformer encoder learns representations from regional fMRI time series, while a multilayer perceptron (MLP) processes phenotypic features.
 
-推荐 Python 3.11–3.13；安装开发依赖后，可使用 `pytest` 运行测试，并使用 `ruff check .` 检查代码。
+The resulting representations are concatenated and passed through a fusion MLP for binary ADHD classification.
 
-## 数据准备接口
+```mermaid
+flowchart LR
+    A["fMRI Time Series"] --> B["Transformer Encoder"]
+    B --> C["fMRI Embedding"]
 
-训练入口当前读取一个 `.npz` 文件，至少包含：
+    D["Phenotypic Features"] --> E["Preprocessing"]
+    E --> F["Phenotype MLP"]
+    F --> G["Phenotype Embedding"]
 
-- `phenotypes`：形状为 `(N, P)` 的浮点表型特征；
-- `images`：形状为 `(N, C, D, H, W)` 的预处理影像张量；
-- `labels`：形状为 `(N,)` 的二分类标签，0 为对照、1 为 ADHD；
-- `subject_ids`：形状为 `(N,)` 的受试者标识；训练时据此分割，以防止泄漏。
+    C --> H["Concatenation"]
+    G --> H
+    H --> I["Fusion MLP"]
+    I --> J["ADHD Prediction"]
+```
 
-将数据路径写入 `configs/experiment.yaml` 的 `data.dataset_path`。NIfTI 读取、配准、切片时序/功能连接构建等预处理应在训练前完成，并记录在独立配置中。
+Participants are matched across modalities using subject-level identifiers to ensure alignment between fMRI data, phenotypic features, and diagnostic labels.
 
-## 隐私与复现
+Implementation: [intermediate_fusion.py](src/adhd200_multimodal/intermediate_fusion.py)
 
-不得将原始受试者资料、可识别 ID、影像或训练检查点提交到版本库。每次实验应固定随机种子，并保存配置、数据版本说明和评价结果。
+Configuration: [intermediate_fusion.yaml](configs/intermediate_fusion.yaml)
+
+## 03 · Methods & Implementation
+
+- **Frameworks:** PyTorch for neural networks; scikit-learn and XGBoost for phenotype-based machine learning.
+- **Cross-validation:** Participant-level, stratified cross-validation with non-overlapping training and evaluation subjects.
+- **Preprocessing:** Phenotypic feature imputation, encoding, and scaling are fitted within training folds to prevent data leakage.
+- **Model training:** Neural models use an inner validation split for early stopping and model selection.
+- **Evaluation:** Model discrimination is assessed using AUROC, with sensitivity, specificity, F1-score, Brier score, and calibration metrics reported as supplementary performance measures.
+
+For matched-cohort comparisons, the multimodal model uses the same outer cross-validation splits as the corresponding unimodal models.
+
+## 04 · Experimental Results
+
+### Preliminary Model Evaluation
+
+| Modality | Model | N | AUROC |
+| :--- | :--- | ---: | ---: |
+| Phenotype | Logistic Regression | 298 | 0.659 |
+| Phenotype | XGBoost | 298 | 0.649 |
+| fMRI | Transformer | 292 | 0.617 |
+
+Results are based on cross-validation and should be interpreted as preliminary estimates. Because cohort sizes differ across modalities, direct performance comparisons are not appropriate.
+
+Detailed evaluation metrics, including 95% confidence intervals, sensitivity, specificity, F1-score, and Brier score, are available in the corresponding experiment reports:
+
+- [Logistic Regression](reports/phenotype_lr/metrics.json)
+- [XGBoost](reports/phenotype_xgboost/metrics.json)
+- [fMRI Transformer](reports/transformer/metrics.json)
+
+## 05 · Limitations & Ongoing Work
+
+- **Sample size:** The relatively small cohorts limit model training and the precision of performance estimates.
+- **Site heterogeneity:** Differences in MRI acquisition protocols and participant characteristics may affect cross-site generalization.
+- **Multimodal evaluation:** Ongoing experiments assess intermediate feature-level fusion against unimodal baselines using matched participants and consistent cross-validation splits.
+- **Generalizability:** Independent external validation is needed before drawing conclusions about performance in new clinical populations.
+
+This repository is an ongoing research project and is not intended for clinical diagnosis or screening.
+
+---
+
+<details>
+<summary>Development, Data Interface & Reproducibility</summary>
+
+### Environment and Checks
+
+The project uses Python, PyTorch, scikit-learn, and XGBoost.
+
+Install dependencies according to the repository configuration, then run:
+
+```bash
+pytest
+ruff check .
+```
+
+### Data Interface
+
+The multimodal workflow uses matched participant-level fMRI time series and phenotypic features.
+
+Conceptual input shapes:
+
+```text
+fMRI time series: (N, T, R)
+Phenotypic data: (N, P)
+Diagnostic labels: (N,)
+Subject identifiers: (N,)
+```
+
+Where:
+
+- `N`: number of participants
+- `T`: number of fMRI time points
+- `R`: number of brain regions
+- `P`: number of phenotypic features after preprocessing
+
+The exact input keys, data paths, and preprocessing requirements are defined by the implementation and experiment configuration.
+
+### Privacy and Reproducibility
+
+Raw participant-level data and imaging files are not distributed through this repository.
+
+Experiment configurations, random seeds, cross-validation procedures, and evaluation outputs are documented to support reproducibility.
+
+</details>

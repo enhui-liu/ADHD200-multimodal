@@ -32,3 +32,7 @@ wandb/
 
 # Logistic Regression experiment outputs
 reports/phenotype_lr/
+
+# Transformer experiment outputs
+reports/transformer/
+reports/transformer_pretrain/reports/transformer_finetune/

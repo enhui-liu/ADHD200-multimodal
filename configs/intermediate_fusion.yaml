@@ -1,0 +1,73 @@
+seed: 42
+
+data:
+  manifest_path: data/processed/transformer_pre_manifest.csv
+  processed_dir: data/processed
+  phenotype_path: data/raw/adhd200_preprocessed_phenotypics.tsv
+  run_selection: first
+  standardize_per_subject: true
+  continuous_features:
+    - Age
+    - Handedness
+    - Verbal IQ
+    - Performance IQ
+    - Full2 IQ
+    - Full4 IQ
+  categorical_features:
+    - Gender
+
+fmri_encoder:
+  input_dim: 190
+  d_model: 64
+  nhead: 4
+  num_layers: 2
+  dim_feedforward: 128
+  dropout: 0.3
+  activation: gelu
+  norm_first: true
+  batch_first: true
+  pooling: mean
+
+# 在每折训练集内部通过内部验证 Loss 选择最优 fMRI 编码器架构，外层测试折不参与选择。
+architecture_candidates:
+  - name: base
+    d_model: 64
+    nhead: 4
+    num_layers: 2
+    dim_feedforward: 128
+  - name: lightweight
+    d_model: 32
+    nhead: 2
+    num_layers: 1
+    dim_feedforward: 64
+
+phenotype_mlp:
+  hidden_dim: 32
+  embedding_dim: 32
+  dropout: 0.3
+
+fusion_mlp:
+  hidden_dim: 64
+  dropout: 0.3
+
+cv:
+  n_splits: 5
+
+training:
+  batch_size: 16
+  epochs: 30
+  learning_rate: 0.001
+  weight_decay: 0.01
+  inner_val_fraction: 0.2
+  early_stopping_patience: 5
+  early_stopping_min_delta: 0.0
+  device: auto
+
+# 仅在每折内部验证集上选取阈值，再应用到对应外层测试折，避免全量 OOF 阈值泄漏。
+threshold: f1
+calibration_bins: 5
+
+bootstrap:
+  n_resamples: 1000
+
+output_dir: reports/intermediate_fusion

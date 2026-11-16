@@ -1,0 +1,477 @@
+{
+  "n_subjects": 292,
+  "n_adhd": 138,
+  "n_control": 154,
+  "site_counts": {
+    "NYU": 212,
+    "KKI": 80
+  },
+  "continuous_features": [
+    "Age",
+    "Handedness",
+    "Verbal IQ",
+    "Performance IQ",
+    "Full2 IQ",
+    "Full4 IQ"
+  ],
+  "categorical_features": [
+    "Gender"
+  ],
+  "architecture_candidates": [
+    {
+      "name": "base",
+      "d_model": 64,
+      "nhead": 4,
+      "num_layers": 2,
+      "dim_feedforward": 128
+    },
+    {
+      "name": "lightweight",
+      "d_model": 32,
+      "nhead": 2,
+      "num_layers": 1,
+      "dim_feedforward": 64
+    }
+  ],
+  "selected_architecture_counts": {
+    "lightweight": 4,
+    "base": 1
+  },
+  "fmri_encoder": {
+    "input_dim": 190,
+    "d_model": 64,
+    "nhead": 4,
+    "num_layers": 2,
+    "dim_feedforward": 128,
+    "dropout": 0.3,
+    "activation": "gelu",
+    "norm_first": true,
+    "batch_first": true,
+    "pooling": "mean"
+  },
+  "phenotype_mlp": {
+    "hidden_dim": 32,
+    "embedding_dim": 32,
+    "dropout": 0.3
+  },
+  "fusion_mlp": {
+    "hidden_dim": 64,
+    "dropout": 0.3
+  },
+  "threshold_rule": "f1",
+  "fold_thresholds": [
+    0.51,
+    0.38,
+    0.44,
+    0.01,
+    0.5
+  ],
+  "mean_fold_threshold": 0.368,
+  "cv_metrics": {
+    "auc": 0.6349049501223414,
+    "sensitivity": 0.7463768115942029,
+    "specificity": 0.4025974025974026,
+    "f1": 0.6186186186186187,
+    "brier": 0.2473396405569674,
+    "calibration_slope": 0.42738009229169677,
+    "calibration_intercept": 0.043492098392863464,
+    "ece": 0.09718646787821432
+  },
+  "cv_ci95": {
+    "auc": [
+      0.5709366197183099,
+      0.695191975610174
+    ],
+    "sensitivity": [
+      0.6714260739260739,
+      0.8161764705882353
+    ],
+    "specificity": [
+      0.31914567288865686,
+      0.47904191616766467
+    ],
+    "f1": [
+      0.5537387581177146,
+      0.6743515850144092
+    ],
+    "brier": [
+      0.22743218326044204,
+      0.26792304265604755
+    ],
+    "calibration_slope": [
+      0.14385743127082215,
+      0.7485435905687592
+    ],
+    "calibration_intercept": [
+      -0.22127751517801816,
+      0.3091519137183122
+    ],
+    "ece": [
+      0.05434407837216885,
+      0.16074476768198892
+    ]
+  },
+  "fold_metrics": [
+    {
+      "fold": 1,
+      "selected_architecture": "lightweight",
+      "selected_n_params": 20737,
+      "phenotype_dim": 12,
+      "dropped_phenotype_features": [
+        "Full2 IQ"
+      ],
+      "threshold": 0.51,
+      "candidate_results": [
+        {
+          "name": "base",
+          "n_params": 87425,
+          "d_model": 64,
+          "nhead": 4,
+          "num_layers": 2,
+          "dim_feedforward": 128,
+          "best_epoch": 4,
+          "stopped_epoch": 9,
+          "best_inner_valid_loss": 0.5761513811476687,
+          "best_inner_valid_auroc": 0.8036363636363636
+        },
+        {
+          "name": "lightweight",
+          "n_params": 20737,
+          "d_model": 32,
+          "nhead": 2,
+          "num_layers": 1,
+          "dim_feedforward": 64,
+          "best_epoch": 13,
+          "stopped_epoch": 18,
+          "best_inner_valid_loss": 0.5362057001032727,
+          "best_inner_valid_auroc": 0.8127272727272727
+        }
+      ],
+      "n_inner_train": 186,
+      "n_inner_valid": 47,
+      "n_outer_valid": 59,
+      "auroc": 0.6025345622119815,
+      "brier": 0.2740333378314972,
+      "f1": 0.5555555555555556,
+      "prob_min": 0.09877645969390869,
+      "prob_max": 0.8679424524307251,
+      "prob_median": 0.40080544352531433,
+      "prob_mean": 0.4464157223701477,
+      "best_epoch": 13,
+      "stopped_epoch": 18,
+      "best_inner_valid_loss": 0.5362057001032727,
+      "outer_valid_loss": 0.7754483980647588,
+      "final_train_loss": 0.20080449624407676,
+      "final_inner_valid_loss": 0.7781949296910712
+    },
+    {
+      "fold": 2,
+      "selected_architecture": "base",
+      "selected_n_params": 87425,
+      "phenotype_dim": 12,
+      "dropped_phenotype_features": [
+        "Full2 IQ"
+      ],
+      "threshold": 0.38,
+      "candidate_results": [
+        {
+          "name": "base",
+          "n_params": 87425,
+          "d_model": 64,
+          "nhead": 4,
+          "num_layers": 2,
+          "dim_feedforward": 128,
+          "best_epoch": 1,
+          "stopped_epoch": 6,
+          "best_inner_valid_loss": 0.6881454079709155,
+          "best_inner_valid_auroc": 0.5418181818181818
+        },
+        {
+          "name": "lightweight",
+          "n_params": 20737,
+          "d_model": 32,
+          "nhead": 2,
+          "num_layers": 1,
+          "dim_feedforward": 64,
+          "best_epoch": 2,
+          "stopped_epoch": 7,
+          "best_inner_valid_loss": 0.6888974917695877,
+          "best_inner_valid_auroc": 0.5727272727272728
+        }
+      ],
+      "n_inner_train": 186,
+      "n_inner_valid": 47,
+      "n_outer_valid": 59,
+      "auroc": 0.6232718894009217,
+      "brier": 0.2397286742925644,
+      "f1": 0.627906976744186,
+      "prob_min": 0.3686707615852356,
+      "prob_max": 0.6355735063552856,
+      "prob_median": 0.5122866630554199,
+      "prob_mean": 0.5046480298042297,
+      "best_epoch": 1,
+      "stopped_epoch": 6,
+      "best_inner_valid_loss": 0.6881454079709155,
+      "outer_valid_loss": 0.6723627286442255,
+      "final_train_loss": 0.6123982244922269,
+      "final_inner_valid_loss": 0.76166222450581
+    },
+    {
+      "fold": 3,
+      "selected_architecture": "lightweight",
+      "selected_n_params": 20737,
+      "phenotype_dim": 12,
+      "dropped_phenotype_features": [
+        "Full2 IQ"
+      ],
+      "threshold": 0.44,
+      "candidate_results": [
+        {
+          "name": "base",
+          "n_params": 87425,
+          "d_model": 64,
+          "nhead": 4,
+          "num_layers": 2,
+          "dim_feedforward": 128,
+          "best_epoch": 11,
+          "stopped_epoch": 16,
+          "best_inner_valid_loss": 0.5905810378967448,
+          "best_inner_valid_auroc": 0.7636363636363636
+        },
+        {
+          "name": "lightweight",
+          "n_params": 20737,
+          "d_model": 32,
+          "nhead": 2,
+          "num_layers": 1,
+          "dim_feedforward": 64,
+          "best_epoch": 13,
+          "stopped_epoch": 18,
+          "best_inner_valid_loss": 0.5437782000988087,
+          "best_inner_valid_auroc": 0.8054545454545454
+        }
+      ],
+      "n_inner_train": 187,
+      "n_inner_valid": 47,
+      "n_outer_valid": 58,
+      "auroc": 0.6284348864994026,
+      "brier": 0.26521581411361694,
+      "f1": 0.5769230769230769,
+      "prob_min": 0.08298682421445847,
+      "prob_max": 0.8810235857963562,
+      "prob_median": 0.39213210344314575,
+      "prob_mean": 0.4260307848453522,
+      "best_epoch": 13,
+      "stopped_epoch": 18,
+      "best_inner_valid_loss": 0.5437782000988087,
+      "outer_valid_loss": 0.749626689943774,
+      "final_train_loss": 0.14683009947047515,
+      "final_inner_valid_loss": 1.266528105482142
+    },
+    {
+      "fold": 4,
+      "selected_architecture": "lightweight",
+      "selected_n_params": 20737,
+      "phenotype_dim": 12,
+      "dropped_phenotype_features": [
+        "Full2 IQ"
+      ],
+      "threshold": 0.01,
+      "candidate_results": [
+        {
+          "name": "base",
+          "n_params": 87425,
+          "d_model": 64,
+          "nhead": 4,
+          "num_layers": 2,
+          "dim_feedforward": 128,
+          "best_epoch": 1,
+          "stopped_epoch": 6,
+          "best_inner_valid_loss": 0.6774089691486764,
+          "best_inner_valid_auroc": 0.5981818181818181
+        },
+        {
+          "name": "lightweight",
+          "n_params": 20737,
+          "d_model": 32,
+          "nhead": 2,
+          "num_layers": 1,
+          "dim_feedforward": 64,
+          "best_epoch": 1,
+          "stopped_epoch": 6,
+          "best_inner_valid_loss": 0.6734464409503531,
+          "best_inner_valid_auroc": 0.6109090909090908
+        }
+      ],
+      "n_inner_train": 187,
+      "n_inner_valid": 47,
+      "n_outer_valid": 58,
+      "auroc": 0.6666666666666665,
+      "brier": 0.22949399054050446,
+      "f1": 0.6352941176470588,
+      "prob_min": 0.32796937227249146,
+      "prob_max": 0.5997830033302307,
+      "prob_median": 0.4447597861289978,
+      "prob_mean": 0.452136367559433,
+      "best_epoch": 1,
+      "stopped_epoch": 6,
+      "best_inner_valid_loss": 0.6734464409503531,
+      "outer_valid_loss": 0.6522359971342415,
+      "final_train_loss": 0.6474312116755522,
+      "final_inner_valid_loss": 0.7065829533211728
+    },
+    {
+      "fold": 5,
+      "selected_architecture": "lightweight",
+      "selected_n_params": 20737,
+      "phenotype_dim": 12,
+      "dropped_phenotype_features": [
+        "Full2 IQ"
+      ],
+      "threshold": 0.5,
+      "candidate_results": [
+        {
+          "name": "base",
+          "n_params": 87425,
+          "d_model": 64,
+          "nhead": 4,
+          "num_layers": 2,
+          "dim_feedforward": 128,
+          "best_epoch": 7,
+          "stopped_epoch": 12,
+          "best_inner_valid_loss": 0.6557142975482535,
+          "best_inner_valid_auroc": 0.6636363636363636
+        },
+        {
+          "name": "lightweight",
+          "n_params": 20737,
+          "d_model": 32,
+          "nhead": 2,
+          "num_layers": 1,
+          "dim_feedforward": 64,
+          "best_epoch": 4,
+          "stopped_epoch": 9,
+          "best_inner_valid_loss": 0.6490050579639192,
+          "best_inner_valid_auroc": 0.6927272727272727
+        }
+      ],
+      "n_inner_train": 187,
+      "n_inner_valid": 47,
+      "n_outer_valid": 58,
+      "auroc": 0.7297619047619048,
+      "brier": 0.22789734601974487,
+      "f1": 0.6785714285714286,
+      "prob_min": 0.3125357925891876,
+      "prob_max": 0.60494065284729,
+      "prob_median": 0.4957353472709656,
+      "prob_mean": 0.4862959682941437,
+      "best_epoch": 4,
+      "stopped_epoch": 9,
+      "best_inner_valid_loss": 0.6490050579639192,
+      "outer_valid_loss": 0.6487853074895924,
+      "final_train_loss": 0.6530275010170146,
+      "final_inner_valid_loss": 0.6767534968700815
+    }
+  ],
+  "probability_distribution": {
+    "n_le_0.1": 6,
+    "n_ge_0.9": 0,
+    "n_between_0.1_and_0.9": 286,
+    "adhd_le_0.1": 2,
+    "adhd_ge_0.9": 0,
+    "control_le_0.1": 4,
+    "control_ge_0.9": 0
+  },
+  "calibration_bins_summary": [
+    {
+      "bin": 1,
+      "n_samples": 59,
+      "n_adhd": 22,
+      "n_control": 37,
+      "prob_min": 0.08298682421445847,
+      "prob_max": 0.33443373441696167,
+      "mean_predicted_prob": 0.20040057599544525,
+      "observed_proportion": 0.3728813559322034
+    },
+    {
+      "bin": 2,
+      "n_samples": 58,
+      "n_adhd": 20,
+      "n_control": 38,
+      "prob_min": 0.33463791012763977,
+      "prob_max": 0.4369351267814636,
+      "mean_predicted_prob": 0.386312332132767,
+      "observed_proportion": 0.3448275862068966
+    },
+    {
+      "bin": 3,
+      "n_samples": 58,
+      "n_adhd": 21,
+      "n_control": 37,
+      "prob_min": 0.43756845593452454,
+      "prob_max": 0.5160390734672546,
+      "mean_predicted_prob": 0.4787329897798341,
+      "observed_proportion": 0.3620689655172414
+    },
+    {
+      "bin": 4,
+      "n_samples": 58,
+      "n_adhd": 36,
+      "n_control": 22,
+      "prob_min": 0.5173030495643616,
+      "prob_max": 0.5729424357414246,
+      "mean_predicted_prob": 0.5440525854456013,
+      "observed_proportion": 0.6206896551724138
+    },
+    {
+      "bin": 5,
+      "n_samples": 59,
+      "n_adhd": 39,
+      "n_control": 20,
+      "prob_min": 0.5752068758010864,
+      "prob_max": 0.8810235857963562,
+      "mean_predicted_prob": 0.7067849413823273,
+      "observed_proportion": 0.6610169491525424
+    }
+  ],
+  "mean_train_loss_curve": [
+    0.7212072988162683,
+    0.6901246912839544,
+    0.6851047800734855,
+    0.6662650989996722,
+    0.6518046255068098,
+    0.6500107492882911,
+    0.6663437016870818,
+    0.6412379741817219,
+    0.6419723652400469,
+    0.6118705627951282,
+    0.5760738361931252,
+    0.540754896831803,
+    0.5163333511650374,
+    0.435171740828015,
+    0.31991504106442914,
+    0.2446895943456875,
+    0.21951835818229293,
+    0.17381729785727595
+  ],
+  "mean_inner_valid_loss_curve": [
+    0.6748861530993848,
+    0.6648748867055202,
+    0.6607042672786306,
+    0.6566666724834037,
+    0.6549485254794993,
+    0.666485409280087,
+    0.612329344800178,
+    0.6156350302358046,
+    0.6067449632265889,
+    0.5599919354661982,
+    0.5585933555947973,
+    0.598646733355015,
+    0.5399919501010407,
+    0.6234551167234461,
+    0.6684580606983064,
+    0.8740697997681639,
+    1.0412162764275328,
+    1.0223615175866065
+  ]
+}
